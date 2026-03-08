@@ -147,8 +147,7 @@ node /absolute/path/to/teable-mcp-server/dist/index.js
 - `convert_field`: PUT `/table/{tableId}/field/{fieldId}/convert`
   Required: `tableId`, `fieldId`, `field`
 - `duplicate_field`: POST `/table/{tableId}/field/{fieldId}/duplicate`
-  Required: `name`
-  Optional: `viewId`
+  Optional: `name` (auto-named by API when omitted), `viewId`
 - `get_field_delete_references`: GET `/table/{tableId}/field/delete-references`
   Required: `fieldIds`
 
@@ -195,19 +194,22 @@ node /absolute/path/to/teable-mcp-server/dist/index.js
 - `duplicate_record`: POST `/table/{tableId}/record/{recordId}/duplicate`
 - `query_teable`: legacy wrapper over list-records style queries
 
-Common optional query fields for `list_records`, `list_all_records`, and `get_table_comment_count`:
+Common optional query fields for `list_records` and `list_all_records`:
 
-- `viewId`
-- `projection`
-- `fieldKeyType`
-- `cellFormat`
+- `viewId`, `projection`, `fieldKeyType`, `cellFormat`
 - `ignoreViewQuery`
 - `filter`, `filterByTql`, `search`, `orderBy`, `groupBy`
 - `collapsedGroupIds`, `queryId`
-- `filterLinkCellCandidate`
-- `filterLinkCellSelected`
+- `filterLinkCellCandidate`, `filterLinkCellSelected`
 - `selectedRecordIds`
 - `take`, `skip`
+
+Optional query fields for `get_table_comment_count`:
+
+- `viewId`, `ignoreViewQuery`
+- `filter`, `filterByTql`, `search`
+- `filterLinkCellCandidate`, `filterLinkCellSelected`
+- `selectedRecordIds`
 
 ### Aggregation
 
@@ -267,7 +269,7 @@ Common optional query fields for `list_records`, `list_all_records`, and `get_ta
 ## Local Development
 
 ```bash
-git clone https://github.com/ltphat2204/teable-mcp-server.git
+git clone https://github.com/apooley/teable-mcp-server.git
 cd teable-mcp-server
 npm install
 npm run build
