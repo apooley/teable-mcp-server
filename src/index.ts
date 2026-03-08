@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { validateConfig } from "./config.js";
-import { TOOLS } from "./tools/definitions.js";
+import { isSqlQueryEnabled, validateConfig } from "./config.js";
+import { getTools } from "./tools/definitions.js";
 import { handleToolCall } from "./tools/handlers.js";
 import { createTeableClient } from "./teable/api.js";
 
 // Start the server with STDIO transport
 async function main() {
     validateConfig();
+    const sqlQueryEnabled = isSqlQueryEnabled();
 
     const baseUrl = process.env.TEABLE_BASE_URL || "https://app.teable.ai";
     const teableClient = createTeableClient({
@@ -28,7 +29,7 @@ async function main() {
         version: "1.0.0",
     });
 
-    for (const tool of TOOLS) {
+    for (const tool of getTools(sqlQueryEnabled)) {
         server.tool(
             tool.name,
             tool.description || "",
@@ -38,6 +39,7 @@ async function main() {
                     baseUrl,
                     oauthClientId: process.env.TEABLE_OAUTH_CLIENT_ID,
                     oauthClientSecret: process.env.TEABLE_OAUTH_CLIENT_SECRET,
+                    sqlQueryEnabled,
                 });
             }
         );

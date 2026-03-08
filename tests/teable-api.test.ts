@@ -115,3 +115,49 @@ describe("oauthRevoke", () => {
     await expect(client.oauthRevoke()).rejects.toBeInstanceOf(TeableApiError);
   });
 });
+
+describe("http verbs", () => {
+  it("sends put requests through the shared request pipeline", async () => {
+    const request = vi.fn(async () => ({ data: { ok: true } }));
+    vi.spyOn(axios, "create").mockReturnValue({
+      request,
+    } as never);
+
+    const client = createTeableClient({
+      baseUrl: "https://app.teable.ai",
+      apiKey: "token",
+    });
+
+    await client.put("/base/base1/table/tbl1/name", { name: "Renamed" });
+
+    expect(request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "PUT",
+        url: "/base/base1/table/tbl1/name",
+        data: { name: "Renamed" },
+      })
+    );
+  });
+
+  it("sends delete bodies when provided", async () => {
+    const request = vi.fn(async () => ({ data: { ok: true } }));
+    vi.spyOn(axios, "create").mockReturnValue({
+      request,
+    } as never);
+
+    const client = createTeableClient({
+      baseUrl: "https://app.teable.ai",
+      apiKey: "token",
+    });
+
+    await client.delete("/comment/tbl1/rec1/c1/reaction", undefined, { reaction: ":+1:" });
+
+    expect(request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "DELETE",
+        url: "/comment/tbl1/rec1/c1/reaction",
+        data: { reaction: ":+1:" },
+      })
+    );
+  });
+});

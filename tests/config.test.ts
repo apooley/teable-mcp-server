@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { validateConfig } from "../src/config.js";
+import { isSqlQueryEnabled, validateConfig } from "../src/config.js";
 
 const ENV_KEYS = [
   "TEABLE_BASE_URL",
@@ -7,6 +7,7 @@ const ENV_KEYS = [
   "TEABLE_OAUTH_CLIENT_ID",
   "TEABLE_OAUTH_CLIENT_SECRET",
   "TEABLE_OAUTH_REFRESH_TOKEN",
+  "TEABLE_ENABLE_SQL_QUERY",
 ] as const;
 
 const initialEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -47,5 +48,13 @@ describe("validateConfig", () => {
     delete process.env.TEABLE_OAUTH_REFRESH_TOKEN;
     delete process.env.TEABLE_BASE_URL;
     expect(() => validateConfig()).not.toThrow();
+  });
+
+  it("enables sql only when the flag is true", () => {
+    process.env.TEABLE_ENABLE_SQL_QUERY = "true";
+    expect(isSqlQueryEnabled()).toBe(true);
+
+    process.env.TEABLE_ENABLE_SQL_QUERY = "false";
+    expect(isSqlQueryEnabled()).toBe(false);
   });
 });

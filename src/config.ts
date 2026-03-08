@@ -35,3 +35,7 @@ export function validateConfig() {
         );
     }
 }
+
+export function isSqlQueryEnabled() {
+    return process.env.TEABLE_ENABLE_SQL_QUERY === "true";
+}

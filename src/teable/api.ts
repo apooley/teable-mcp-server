@@ -44,8 +44,9 @@ export type OAuthRevokeArgs = {
 export type TeableClient = {
   get<T>(path: string, params?: unknown): Promise<T>;
   post<T>(path: string, body?: unknown, params?: unknown): Promise<T>;
+  put<T>(path: string, body?: unknown, params?: unknown): Promise<T>;
   patch<T>(path: string, body?: unknown, params?: unknown): Promise<T>;
-  delete<T>(path: string, params?: unknown): Promise<T>;
+  delete<T>(path: string, params?: unknown, body?: unknown): Promise<T>;
   postForm<T>(path: string, form: FormData): Promise<T>;
   oauthExchangeCode(args: OAuthExchangeCodeArgs): Promise<unknown>;
   oauthRefresh(args?: OAuthRefreshArgs): Promise<unknown>;
@@ -342,6 +343,13 @@ export function createTeableClient(config: TeableClientConfig): TeableClient {
         data: body,
         params,
       }),
+    put: <T>(path: string, body?: unknown, params?: unknown) =>
+      request<T>({
+        method: "PUT",
+        url: path,
+        data: body,
+        params,
+      }),
     patch: <T>(path: string, body?: unknown, params?: unknown) =>
       request<T>({
         method: "PATCH",
@@ -349,11 +357,12 @@ export function createTeableClient(config: TeableClientConfig): TeableClient {
         data: body,
         params,
       }),
-    delete: <T>(path: string, params?: unknown) =>
+    delete: <T>(path: string, params?: unknown, body?: unknown) =>
       request<T>({
         method: "DELETE",
         url: path,
         params,
+        data: body,
       }),
     postForm: <T>(path: string, form: FormData) =>
       request<T>({
