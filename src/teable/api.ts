@@ -318,7 +318,6 @@ export function createTeableClient(config: TeableClientConfig): TeableClient {
     }
 
     const payload = compactObject({
-      clientId,
       clientSecret: args?.clientSecret || oauthState.clientSecret,
     });
     return request<unknown>({

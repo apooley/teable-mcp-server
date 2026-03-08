@@ -121,8 +121,8 @@ export const uploadAttachmentInput = z
     tableId: z.string(),
     recordId: z.string(),
     fieldId: z.string(),
-    filePath: z.string().optional(),
-    fileUrl: z.string().url().optional(),
+    filePath: z.string().optional().describe("Local filesystem path to the file. Provide exactly one of filePath or fileUrl."),
+    fileUrl: z.string().url().optional().describe("Remote URL of the file to upload. Provide exactly one of filePath or fileUrl."),
   })
   .refine((value) => (value.filePath ? 1 : 0) + (value.fileUrl ? 1 : 0) === 1, {
     message: "Provide exactly one of filePath or fileUrl",
@@ -247,7 +247,7 @@ export const convertFieldInput = z.object({
 export const duplicateFieldInput = z.object({
   tableId: z.string(),
   fieldId: z.string(),
-  name: z.string().min(1),
+  name: z.string().min(1).optional(),
   viewId: z.string().optional(),
 });
 
@@ -425,7 +425,17 @@ export const getRecordCommentCountInput = z.object({
   recordId: z.string(),
 });
 
-export const getTableCommentCountInput = ListRecordsQuery;
+export const getTableCommentCountInput = z.object({
+  tableId: z.string(),
+  viewId: z.string().optional(),
+  ignoreViewQuery: z.boolean().optional(),
+  filter: z.unknown().optional(),
+  filterByTql: z.string().optional(),
+  search: JsonArray.optional(),
+  filterLinkCellCandidate: LinkCellCandidateFilter.optional(),
+  filterLinkCellSelected: LinkCellSelectedFilter.optional(),
+  selectedRecordIds: z.array(z.string()).optional(),
+});
 
 export const insertAttachmentInput = z.object({
   tableId: z.string(),
