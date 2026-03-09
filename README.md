@@ -113,6 +113,10 @@ node /absolute/path/to/teable-mcp-server/dist/index.js
 
 5. Add env vars such as `TEABLE_API_KEY`, `TEABLE_BASE_URL`, and optionally `TEABLE_ENABLE_SQL_QUERY`.
 
+### MCPorter Note
+
+- When registering with `mcporter`, use `--arg` (repeatable) rather than `--args`.
+
 ## Tool Reference
 
 ### Discovery And Structure
